@@ -32,7 +32,7 @@ msa-starter-kit을 통해 다음과 같이 설치
 
 설치하면 아래와 같은 구성요소들이 설치된다.
 
-![image](https://user-images.githubusercontent.com/112376183/195263573-d76fd0a9-61b1-47fc-a025-0469da92af92.png)
+![cicd-msa-env](https://user-images.githubusercontent.com/112376183/201487394-ebf3a507-aa51-4cb1-87e3-08b283a868fe.png)
 
 
 ### CI구성
