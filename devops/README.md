@@ -75,7 +75,7 @@ CI가 완료되면 1.MSA어플리케이션은 이미지 형태로 containerize�
 # gitops address - https://github.com/oscka/sample-gitops.git
 # https방식으로 연결시 github id와 access token이 필요하다.(password는 보안때문에 사용 불가)
 
-#2. CD를 위한 app을 등록한다.
+#2. 배포를 위한 app을 등록한다.
 # Application Name - sample-api
 # Project Name - default
 # Repository URL - https://github.com/oscka/sample-gitops.git(자동입력 선택)
@@ -87,9 +87,21 @@ CI가 완료되면 1.MSA어플리케이션은 이미지 형태로 containerize�
 # Create 후 Refresh, SYNC 버튼을 한 번씩 눌러주면 gitops의 내용이 클러스터에 deploy된다.
 ```
 
+위와 같이 수행하여 application이 pod로 정상적으로 cluster에 구동되었음을 확인한다.
+이후 다음과 같이 버전을 올려 테스트 해 본다.
+
+```zsh
+#3. 어플리케이션의 버전을 올린 뒤 tag의 버전을 수정한다
+# 버전을 올리기 위해 소스코드를 수정한다.
+# git add ./*;git commit -m "version up";git push
+# git tag 0.0.19;git push
+
+#4. jenkins에서 해당job을 찾아 빌드를 수행한다.
+#5. argocd에서 sync하여 버전이 제대로 적용되었는지 확인한다.
+```
 
 
-테스트
+### 테스트
 
 생성한 application 테스트를 위해 다음과 같은 k8s manifest를 저장하여 클러스터에 적용한다.
 
@@ -121,7 +133,7 @@ k apply -f ./sample-api-ingress.yml -n api
 
 생성된 다음 주소를 호출하고 테스트한다. 
 
-http://sample-api.192.168.121.175.sslip.io/swagger-ui.html
+http://sample-api.{{서버의IP주소}}.sslip.io/swagger-ui.html
 
 
 
