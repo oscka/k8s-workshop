@@ -1,5 +1,13 @@
 # k8s-workshop
 
+- [k8s-workshop](#k8s-workshop)
+  - [devops](#devops)
+    - [소개](#소개)
+    - [설치](#설치)
+    - [CI구성](#ci구성)
+    - [CD구성](#cd구성)
+    - [테스트](#테스트)
+
 ## devops
 
 ### 소개
@@ -30,9 +38,19 @@ msa-starter-kit을 통해 다음과 같이 설치
 ./run-play.sh  "tool-basic, ohmyzsh, helm-repo, k3s, ingress-nginx, jenkins, argocd, mysql"
 ```
 
-설치하면 아래와 같은 구성요소들이 설치된다.
+설치하면 아래와 같은 구성과 같이 설치된다.
 
 ![cicd-msa-env](https://user-images.githubusercontent.com/112376183/201487394-ebf3a507-aa51-4cb1-87e3-08b283a868fe.png)
+
+다음 프로젝트를 fork하여 각자의 계정에 프로젝트를 생성한다.
+
+- sample-api - https://github.com/oscka/sample-api.git
+- sample-gitops - https://github.com/oscka/sample-gitops.git
+
+향후 진행할 샘플에서 연결할 프로젝트는 각자 개인계정의 다음 프로젝트를 기반으로 한다.
+
+- sample-api - https://github.com/{{개인ID}}/sample-api.git
+- sample-gitops - https://github.com/{{개인ID}}/sample-gitops.git
 
 
 ### CI구성
@@ -57,7 +75,7 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 
 #5.job 생성
 #- jekins UI상에서 sample-api-build를 pipeline job으로 생성
-#- git address - https://github.com/oscka/sample-api.git
+#- git address - https://github.com/{{개인ID}}/sample-api.git
 #- 이 빌드는 매개변수가 있습니다. 를 선택하여 TAG를 입력
 #- pipeline script는 SCM에서 가져온 Jenkinsfile을 선택
 
@@ -72,13 +90,13 @@ CI가 완료되면 1.MSA어플리케이션은 이미지 형태로 containerize�
 
 ```zsh
 #1. argocd에 로그인하여 setting > repository 메뉴에서 새로운 repository를 등록한다.
-# gitops address - https://github.com/oscka/sample-gitops.git
+# gitops address - https://github.com/{{개인ID}}/sample-gitops.git
 # https방식으로 연결시 github id와 access token이 필요하다.(password는 보안때문에 사용 불가)
 
 #2. 배포를 위한 app을 등록한다.
 # Application Name - sample-api
 # Project Name - default
-# Repository URL - https://github.com/oscka/sample-gitops.git(자동입력 선택)
+# Repository URL - https://github.com/{{개인ID}}/sample-gitops.git(자동입력 선택)
 # Revision - main(자동입력 선택)
 # Path - sample-api/rolling-update-no-istio(자동입력 선택)
 # Cluster URL - https://kubernetes.default.svc(자동입력 선택)
