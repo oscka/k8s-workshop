@@ -21,11 +21,3 @@ k apply -f sample-alb-ingress.yml
 ```
 
 좀 더 자세한 내용은 [이곳](https://osc-korea.atlassian.net/wiki/spaces/consulting/pages/685211651/nks+alb+ingress+controller)을 참고한다. 
-
-
-```
-# simple-api deployment를 위한 secret생성
-kubectl create secret docker-registry dockersecret --docker-username="oscka" \
---docker-password="1P9V4X#yn#6G" --docker-server=https://index.docker.io/v1/
-
-```
