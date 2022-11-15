@@ -5,8 +5,8 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/description: 'alb ingress controller'
-    alb.ingress.kubernetes.io/actions.navercloud: >
-      {"type":"targetGroup","targetGroup":{"targetGroups":[{"serviceName":"naver","servicePort":80,"weight":50},{"serviceName":"cloud","servicePort":80,"weight":50}]}}
+    alb.ingress.kubernetes.io/actions.simple-api: >
+      {"type":"targetGroup","targetGroup":{"targetGroups":[{"serviceName":"simple-api","servicePort":80,"weight":50},{"serviceName":"simple-api","servicePort":80,"weight":50}]}} 
   labels:
     app: sample-alb-ingress
 spec:
@@ -26,10 +26,17 @@ spec:
                 name: platform
                 port:
                   number: 80
-          - path: /navercloud
+          - path: /cloud
             pathType: Exact
             backend:
               service:
-                name: navercloud
+                name: cloud
+                port:
+                  number: 80 
+          - path: /api/simple
+            pathType: Exact
+            backend:
+              service:
+                name: simple-api
                 port:
                   name: use-annotation

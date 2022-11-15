@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-alb-ingress
+  annotations:
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/description: 'alb simple ingress controller'
+    alb.ingress.kubernetes.io/healthcheck-path: '/api/simple'
+  labels:
+    app: simple-alb-ingress
+spec:
+  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: naver
+      port:
+        number: 80
+  rules:
+    - http:
+        paths:
+          - path: /api/simple
+            pathType: Exact
+            backend:
+              service:
+                name: simple-api
+                port:
+                  number: 80
