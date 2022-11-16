@@ -5,21 +5,15 @@ metadata:
   annotations:
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
     alb.ingress.kubernetes.io/description: 'alb simple ingress controller'
-    alb.ingress.kubernetes.io/healthcheck-path: '/api/simple'
+      #    alb.ingress.kubernetes.io/healthcheck-path: '/api/simple'
   labels:
     app: simple-alb-ingress
 spec:
   ingressClassName: alb
   rules:
-    - http:
+    - host: test.osckorea.info
+      http:
         paths:
-          - path: /naver
-            pathType: Prefix
-            backend:
-              service:
-                name: naver
-                port:
-                  number: 80
           - path: /api/simple
             pathType: Prefix
             backend:
@@ -27,6 +21,9 @@ spec:
                 name: simple-api
                 port:
                   number: 80
+    - host: test2.osckorea.info
+      http:
+        paths:
           - path: /api/version
             pathType: Prefix
             backend:
