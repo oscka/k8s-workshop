@@ -18,8 +18,8 @@ spec:
   rules:
     - http:
         paths:
-          - path: /api/simple
-            pathType: Exact
+          - path: /api
+            pathType: Prefix 
             backend:
               service:
                 name: simple-api

@@ -11,7 +11,7 @@ ncp kubernetes service상에서 테스트를 위한 workshop
 k apply -f nks-sample-services.yml
 # install nks-alb
 # kubectl apply -f https://raw.githubusercontent.com/NaverCloudPlatform/nks-alb-ingress-controller/main/docs/install/pub/install.yaml 과 동일
-k apply -f install-nks-alb.yml
+k apply -f install-nks-alb-ingress-controller.yml
 ```
 아래와 같이 ingress를 생성하면 자동으로 ncp상에 LoadBalancer가 생성되며 서비스가 노출된다.
 

@@ -33,7 +33,7 @@ spec:
                 name: cloud
                 port:
                   number: 80 
-          - path: /api/simple
+          - path: /navercloud
             pathType: Exact
             backend:
               service:
