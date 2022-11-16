@@ -38,4 +38,9 @@ kubectl apply -f simple-api-deployment.yaml
 # simple-api alb ingress 생성
 kubectl apply -f simple-api-alb-ingress.yaml
 ```
+simple-api-deployment의 경우 private registry에 접근하기 위해 secret을 k8s에 생성하여야 하며 다음과 같이 생성하고 해당 secret의 이름을 deployment에 적용한다.
 
+```zsh
+kubectl create secret docker-registry dockersecret --docker-username="{사용자ID}" \
+--docker-password="{사용자PW}" --docker-server=https://index.docker.io/v1/
+```
