@@ -12,10 +12,10 @@ sanple 1은 다음 ncp의 공식 산출물 내용을 기반으로 한다.
 아래와 같이 테스트를 위한 deployment, service들과 alb-ingress-controller를 설치한다.
 
 ```bash
-# install test sample
+# fruit deployment, service 생성
 kubectl apply -f nks-sample-services.yml
 
-# install nks-alb-ingress-controller
+# nks alb ingress controller 설치
 # kubectl apply -f https://raw.githubusercontent.com/NaverCloudPlatform/nks-alb-ingress-controller/main/docs/install/pub/install.yaml 과 동일
 kubectl apply -f install-nks-alb-ingress-controller.yml
 ```
