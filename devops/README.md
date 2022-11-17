@@ -35,7 +35,8 @@ msa-starter-kit을 통해 다음과 같이 설치
 
 
 ```bash
-./run-play.sh  "tool-basic, ohmyzsh, helm-repo, k3s, ingress-nginx, jenkins, argocd, mysql"
+./run-play.sh  "tool-basic, ohmyzsh, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql"
+./run-play.sh  "skaffold, kustomize"
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
@@ -59,7 +60,7 @@ Jenkins의 경우 job실행 속도 문제로 클러스터 밖의 환경에 별�
 이후 아래와 같은 작업이 필요하다.
 
 ```bash
-#1.jenkins계정에 docker 실행권한 부여(재시작,재로그인 후 반영)
+#1.containerizejenkins계정에 docker 실행권한 부여(재시작,재로그인 후 반영)
 sudo usermod -aG docker jenkins
 sudo service docker restart
 
@@ -69,14 +70,17 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 
 #3.로그인 후 플러그인 설치
 # 플러그인 3개 - git parameter, workspace cleanup, docker pipeline
+# docker pipeline의 경우 초기세팅시 선택 불가하므로 차후 jenkins관리메뉴에서 설치할 것
+# 플러그인 설치가 안될 경우 jenkins재시작하여 다시 시도 
 
 #4.secret 생성 - git-credential, imageRegistry-credential
-#jenkins관리 - credential상에 위의 이름으로 생성하고 각각 github의 accesstoken 정보와 docker hub의 ID/PW정보를 입력해 둔다.
+#jenkins관리 > credential상에 위의 이름으로 생성하고 각각 github의 accesstoken 정보와 docker hub의 ID/PW정보를 입력해 둔다.
 
 #5.job 생성
 #- jekins UI상에서 sample-api-build를 pipeline job으로 생성
-#- git address - https://github.com/{{개인ID}}/sample-api.git
-#- 이 빌드는 매개변수가 있습니다. 를 선택하여 TAG를 입력
+#- 상단에서 "이 빌드는 매개변수가 있습니다." 를 선택하여 TAG를 입력
+#- 하단에서 "Pipeline Scipr from SCM"을 선택하고
+#- git address(https://github.com/{{개인ID}}/sample-api.git)와 브랜치 입력
 #- pipeline script는 SCM에서 가져온 Jenkinsfile을 선택
 
 #6. 빌드 도구 설치
