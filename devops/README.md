@@ -79,7 +79,7 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 #5.job 생성
 #- jekins UI상에서 sample-api-build를 pipeline job으로 생성
 #- 상단에서 "이 빌드는 매개변수가 있습니다." 를 선택하여 TAG를 입력
-#- 하단에서 "Pipeline Scipr from SCM"을 선택하고
+#- 하단 Pipeline 메뉴에서  "Pipeline Script from SCM"을 선택하고
 #- git address(https://github.com/{{개인ID}}/sample-api.git)와 브랜치 입력
 #- pipeline script는 SCM에서 가져온 Jenkinsfile을 선택
 
