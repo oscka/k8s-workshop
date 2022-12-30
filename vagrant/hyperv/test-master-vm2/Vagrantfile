@@ -1,9 +1,8 @@
-VMHOSTNAME="test-vm1"
+VMHOSTNAME="test-master-vm2"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "generic/ubuntu2004"
   config.vm.provider "hyperv"
-  config.vm.hostname = VMHOSTNAME
   config.vm.network "public_network"
   config.vm.synced_folder ".", "/vagrant", disabled: true
   config.vm.provider "hyperv" do |h|
