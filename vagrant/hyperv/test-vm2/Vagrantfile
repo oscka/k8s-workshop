@@ -1,0 +1,15 @@
+VMHOSTNAME="test-vm2"
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "generic/ubuntu2004"
+  config.vm.provider "hyperv"
+  config.vm.network "public_network"
+  config.vm.synced_folder ".", "/vagrant", disabled: true
+  config.vm.provider "hyperv" do |h|
+    h.vmname = VMHOSTNAME
+	h.cpus = 4
+	h.memory = 4096
+	h.maxmemory = 8192
+	h.linked_clone = true
+  end
+end
