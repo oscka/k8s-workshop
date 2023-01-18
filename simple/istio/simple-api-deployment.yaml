@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-api-deployment
+  namespace: api
+  labels:
+    app: simple-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-api
+  template:
+    metadata:
+      labels:
+        app: simple-api
+    spec:
+      containers:
+      - name: simple-api
+        image: oscka/simple-api:0.0.7
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+  minReadySeconds: 30
+  revisionHistoryLimit: 3

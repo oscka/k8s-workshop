@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+
+metadata:
+  name: simple-api-svc
+  namespace: api
+spec:
+  selector:
+    app: simple-api
+
+  ports:
+  - protocol: TCP
+    name: http
+    port: 8080
+    targetPort: http
+    # nodePort: 30031
+  # type: LoadBalancer
