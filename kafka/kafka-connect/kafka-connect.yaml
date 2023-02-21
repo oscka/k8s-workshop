@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-connect-service-new
+spec:
+  ports:
+    - port: 8083
+      targetPort: 8083
+      name: http
+  type: ClusterIP
+  selector:
+    app: kafka-connect-new
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-connect-new-deploy
+  labels:
+    app: kafka-connect-new
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-connect-new
+      version: v1
+  template:
+    metadata:
+      annotations :
+        sidecar.istio.io/inject: disable
+      labels:
+        app: kafka-connect-new
+        version: v1
+        group: logiall-top
+    spec:
+      containers:
+        - name: kafka-connect-new
+          image: cnfldemos/kafka-connect-datagen:0.5.0-6.2.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8083
+          envFrom:
+            - configMapRef:
+                name : kafka-connect-cm
+          volumeMounts:
+            - name: kafka-connect-jars
+              mountPath: /etc/kafka-connect/jars # kafka-connect 가 바라볼 plugin 경로: env 파일의 plugin path와 일치해야함
+      volumes:
+        - name: kafka-connect-jars
+          hostPath:
+            path: /vagrant/kafka-connect/jars # node의 경로를 mount해준다

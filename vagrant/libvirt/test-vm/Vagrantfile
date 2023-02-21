@@ -1,0 +1,16 @@
+VMHOSTNAME="test-cicd"
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.configure("2") do |config|
+
+  ##### DEFINE VM #####
+  config.vm.define VMHOSTNAME do |config|
+  config.vm.hostname = VMHOSTNAME 
+  config.vm.box = "generic/ubuntu2204"
+  config.vm.box_check_update = false
+  config.vm.network "private_network", ip: '192.168.121.10'
+  config.vm.provider :libvirt do |v|
+    v.memory = 8192
+    end
+  end
+end
