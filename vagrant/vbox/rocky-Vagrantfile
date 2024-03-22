@@ -1,0 +1,18 @@
+Vagrant.configure("2") do |config|  
+      config.vm.box = "generic/rocky8"
+      config.vm.hostname = "rocky-vm4"
+      config.vm.network "public_network", ip: "192.168.41.18", gateway: "192.168.41.254", dns: "8.8.8.8"
+      config.vm.provider "virtualbox" do |v|
+            v.memory = 4096
+ 
+      end
+      
+      # delete default gw on eth0
+      config.vm.provision "shell",
+            run: "always",
+            inline: "eval `route -n | awk '{ if ($8 ==\"eth0\" && $2 != \"0.0.0.0\") print \"route del default gw \" $2; }'`"
+      config.vm.provision "shell", inline: <<-SHELL
+            #change timezone
+            timedatectl set-timezone 'Asia/Seoul'
+      SHELL
+end
