@@ -12,7 +12,7 @@
 
 ### 소개
 
-kubernetes 클러스터를 기반으로 CI,CD 환경을 구성하는 hands-on workshop
+본 문서는 kubernetes 클러스터를 기반으로 CI,CD 환경을 구성하는 hands-on workshop이다.
 
 다음과 같은 구성으로 되어 있다.
 
@@ -22,13 +22,21 @@ kubernetes 클러스터를 기반으로 CI,CD 환경을 구성하는 hands-on wo
 - argocd
 - mysql
 - sample-api
-- sample-fe
 - github(외부 서비스)
 - docker hub(외부 서비스)
 
+### 환경준비
+
+다음과 같이 vagrant(virtualbox)기반으로 vm을 두 대 생성한다. 
+- vm1 - agent역할, ansible 코드를 받아 target서버에 설치를 수행한다.
+- vm2 - target역할, jenkins 및 k3s기반 클러스터, sample-api가 실행된다.
+vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
+
+각 vm을 띄우는 방법은 [msa-starter-kit](https://github.com/oscka/msa-starter-kit/tree/develop/test-vm1)의 Vagrantfile을 참고한다. 로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
+
 ### 설치
 
-msa-starter-kit을 통해 다음과 같이 설치
+[msa-starter-kit](https://github.com/oscka/msa-starter-kit)을 통해 다음과 같이 설치
 
 - k3s, ingress-nginx, argocd, mysql 은 클러스터상에 설치
 - jenkins는 클러스터 밖에 별도로 설치
@@ -40,6 +48,8 @@ msa-starter-kit을 통해 다음과 같이 설치
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
+- 파란색 흐름 - CI(통합빌드)를 의미, 소스코드를 받아 빌드, dockerizing하고 docker hub에 push한다.
+- 빨간색 흐름 - CD(배포)를 의미, Gitops에 변경된 버전을 확인하여 정의된 배포 전략에 따라 배포를 수행한다.
 
 ![cicd-msa-env](https://user-images.githubusercontent.com/112376183/201487394-ebf3a507-aa51-4cb1-87e3-08b283a868fe.png)
 
@@ -60,7 +70,7 @@ Jenkins의 경우 job실행 속도 문제로 클러스터 밖의 환경에 별�
 이후 아래와 같은 작업이 필요하다.
 
 ```bash
-#1.containerizejenkins계정에 docker 실행권한 부여(재시작,재로그인 후 반영)
+#1.containerize를 위하여 jenkins계정에 docker 실행권한 부여(docker daemon 재시작,재로그인 후 반영)
 sudo usermod -aG docker jenkins
 sudo service docker restart
 
@@ -75,6 +85,8 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 
 #4.secret 생성 - git-credential, imageRegistry-credential
 #jenkins관리 > credential상에 위의 이름으로 생성하고 각각 github의 accesstoken 정보와 docker hub의 ID/PW정보를 입력해 둔다.
+#github의 access token은 각자의 계정에서 Account > Setting > Developer setting에서 classic token으로 생성하며, Repo관련 권한을 전부 부여
+#docker hub계정은 공용으로 별도로 전달한 것을 사용한다.(개인계정을 써도 상관 없음)
 
 #5.job 생성
 #- jekins UI상에서 sample-api-build를 pipeline job으로 생성
