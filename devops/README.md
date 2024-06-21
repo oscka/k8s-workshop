@@ -33,9 +33,11 @@
   - 파일 위치 - vagrant\vbox\ansible1\Vagrantfile
 - vm2(ansible2) - target역할, jenkins 및 k3s기반 클러스터, sample-api가 실행된다.
   - 파일 위치 - vagrant\vbox\ansible2\Vagrantfile
+
 vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
 
 각 vm을 띄우는 방법은 본 프로젝트의 Vagrantfile을 참고한다. 
+
 로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
 
 각 환경에 ip, password로 접속되는 지 확인한다.
@@ -53,7 +55,7 @@ sudo systemctl restart ssh
 
 #### ansible 설치
 
-OS를 최신버전으로 업데이트 한 뒤 ansible을 설치한다.
+agent서버의 OS를 최신버전으로 업데이트 한 뒤 ansible을 설치한다.(ansible 설치에는 여러가지 방법이 있으나, 해당 스크립트가 돌아갈 수 있는 버전을 설치하여야 한다.)
 ```zsh
 sudo apt update
 sudo apt upgrade
@@ -108,7 +110,7 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 
 ### CI구성
 
-Jenkins의 경우 job실행 속도 문제로 클러스터 밖의 환경에 별도로 설치하도록 구성되어 있으며 설치만 수행하고 있음
+Jenkins의 경우 job실행 속도 문제로 클러스터 밖의 환경에 별도로 설치하도록 ansible script가 구성되어 있으며 설치만 수행하고 있음
 이후 아래와 같은 작업이 필요하다.
 
 ```bash
