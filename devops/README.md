@@ -3,6 +3,7 @@
 - [k8s-workshop](#k8s-workshop)
   - [devops](#devops)
     - [소개](#소개)
+    - [환경준비](#환경준비)
     - [설치](#설치)
     - [CI구성](#ci구성)
     - [CD구성](#cd구성)
@@ -28,19 +29,60 @@
 ### 환경준비
 
 다음과 같이 vagrant(virtualbox)기반으로 vm을 두 대 생성한다. 
-- vm1 - agent역할, ansible 코드를 받아 target서버에 설치를 수행한다.
-- vm2 - target역할, jenkins 및 k3s기반 클러스터, sample-api가 실행된다.
+- vm1(ansible1) - agent역할, ansible 코드를 받아 target서버에 설치를 수행한다.
+  - 파일 위치 - vagrant\vbox\ansible1\Vagrantfile
+- vm2(ansible2) - target역할, jenkins 및 k3s기반 클러스터, sample-api가 실행된다.
+  - 파일 위치 - vagrant\vbox\ansible2\Vagrantfile
 vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
 
-각 vm을 띄우는 방법은 [msa-starter-kit](https://github.com/oscka/msa-starter-kit/tree/develop/test-vm1)의 Vagrantfile을 참고한다. 로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
+각 vm을 띄우는 방법은 본 프로젝트의 Vagrantfile을 참고한다. 
+로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
+
+각 환경에 ip, password로 접속되는 지 확인한다.
+ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정을 수정한 뒤 데몬을 restart한다
+```zsh
+#sudo vi /etc/ssh/sshd_config
+...
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication yes --> 이 부분을 no에서 yes로 변경
+...
+sudo systemctl restart ssh
+```
 
 ### 설치
 
-[msa-starter-kit](https://github.com/oscka/msa-starter-kit)을 통해 다음과 같이 설치
+#### ansible 설치
+
+OS를 최신버전으로 업데이트 한 뒤 ansible을 설치한다.
+```zsh
+sudo apt update
+sudo apt upgrade
+sudo apt install ansible
+```
+agent -> target으로 패스워드 없이 접속하기 위해 agent에서 ssh key를 생성하고, target에 등록한다.
+
+```zsh
+ssh-keygen
+# 실행 후 계속 엔터
+ssh-copy-id vagrant@192.168.56.11
+# 키를 등록해준다. 등록 후 password 없이 접속되는지 확인한다.
+ssh vagrant@192.168.56.11
+```
+
+#### starter-kit 설치
+
+[msa-starter-kit](https://github.com/oscka/msa-starter-kit)을 clone하여 다음과 같이 설치
+
+사전에 playbooks/host-vm 파일의 내용을 아래와 같이 수정하여 ansible이 작업을 실행할 수 있게 설정한다. 
+
+```zsh
+# host-vm 파일의 내용 수정
+step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ssh_private_key_file=/home/vagrant/.ssh/id_rsa
+# 이후 show-ping-test.sh 로 정상 수행되는지 확인한다.
+```
 
 - k3s, ingress-nginx, argocd, mysql 은 클러스터상에 설치
 - jenkins는 클러스터 밖에 별도로 설치
-
 
 ```bash
 ./run-play.sh  "tool-basic, ohmyzsh, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql"
