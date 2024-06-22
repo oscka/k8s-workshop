@@ -48,7 +48,8 @@ ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정을 
 # To disable tunneled clear text passwords, change to no here!
 PasswordAuthentication yes --> 이 부분을 no에서 yes로 변경
 ...
-sudo systemctl restart ssh
+#설정파일 수정 후 ssh 데몬을 restart해야 한다.
+#sudo systemctl restart ssh
 ```
 
 ### 설치
@@ -59,6 +60,13 @@ agent서버의 OS를 최신버전으로 업데이트 한 뒤 ansible을 설치�
 ```zsh
 sudo apt update
 sudo apt upgrade
+sudo apt install ansible
+```
+공식 패키지 설치버전은 간혹 오류가 생길 수 있으므로, script실행이 안될 경우 아래와 같이 수행한다.
+```
+sudo apt install software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt update
 sudo apt install ansible
 ```
 agent -> target으로 패스워드 없이 접속하기 위해 agent에서 ssh key를 생성하고, target에 등록한다.
