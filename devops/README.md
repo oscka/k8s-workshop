@@ -96,7 +96,6 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 
 ```bash
 ./run-play.sh  "tool-basic, ohmyzsh, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql"
-./run-play.sh  "skaffold, kustomize"
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
