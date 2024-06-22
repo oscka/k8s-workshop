@@ -95,7 +95,7 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 - jenkins는 클러스터 밖에 별도로 설치
 
 ```bash
-./run-play.sh  "tool-basic, ohmyzsh, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql"
+./run-play.sh  "tool-basic, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql"
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
