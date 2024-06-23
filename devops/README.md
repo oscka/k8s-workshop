@@ -62,8 +62,8 @@ sudo apt update
 sudo apt upgrade
 sudo apt install ansible
 ```
-공식 패키지 설치버전은 간혹 오류가 생길 수 있으므로, script실행이 안될 경우 아래와 같이 수행한다.
-```
+OS에서 지원하는 공식 패키지 설치버전 실제 현재 사용중인 버전보다 많이 이전이므로 실행시 간혹 오류가 생길 수 있으므로, script실행이 안될 경우 아래와 같이 수행한다.
+```zsh
 sudo apt install software-properties-common
 sudo add-apt-repository --yes --update ppa:ansible/ansible
 sudo apt update
