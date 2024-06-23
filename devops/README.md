@@ -31,8 +31,10 @@
 다음과 같이 vagrant(virtualbox)기반으로 vm을 두 대 생성한다. 
 - vm1(ansible1) - agent역할, ansible 코드를 받아 target서버에 설치를 수행한다.
   - 파일 위치 - vagrant\vbox\ansible1\Vagrantfile
+  - 권장 사양 - 4core, 4G ram
 - vm2(ansible2) - target역할, jenkins 및 k3s기반 클러스터, sample-api가 실행된다.
   - 파일 위치 - vagrant\vbox\ansible2\Vagrantfile
+  - 권장 사양 - 8core, 8G ram
 
 vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
 
