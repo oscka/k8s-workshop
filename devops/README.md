@@ -30,19 +30,18 @@
 
 다음과 같이 vagrant(virtualbox)기반으로 vm을 두 대 생성한다. 
 - vm1(ansible1) - agent역할, ansible 코드를 받아 target서버에 설치를 수행한다.
-  - 파일 위치 - vagrant\vbox\ansible1\Vagrantfile
+  - 파일 위치 - [vagrant\vbox\ansible1\Vagrantfile](https://raw.githubusercontent.com/oscka/k8s-workshop/main/vagrant/vbox/ansible1/Vagrantfile)
   - 권장 사양 - 4core, 4G ram
 - vm2(ansible2) - target역할, jenkins 및 k3s기반 클러스터, sample-api가 실행된다.
-  - 파일 위치 - vagrant\vbox\ansible2\Vagrantfile
+  - 파일 위치 - [vagrant\vbox\ansible2\Vagrantfile](https://raw.githubusercontent.com/oscka/k8s-workshop/main/vagrant/vbox/ansible2/Vagrantfile)
   - 권장 사양 - 8core, 8G ram
 
-vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
+주의사항
+- vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
+- 각 vm을 띄우는 방법은 링크된 Vagrantfile을 참고한다. 
+- 로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
 
-각 vm을 띄우는 방법은 본 프로젝트의 Vagrantfile을 참고한다. 
-
-로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
-
-각 환경에 ip, password로 접속되는 지 확인한다.
+vm생성 후 각 환경에 ip, password로 접속되는 지 확인한다.
 ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정을 수정한 뒤 데몬을 restart한다
 ```zsh
 #sudo vi /etc/ssh/sshd_config
@@ -191,6 +190,7 @@ CI가 완료되면 1.MSA어플리케이션은 이미지 형태로 containerize�
 ### 테스트
 
 생성한 application 테스트를 위해 다음과 같은 k8s manifest를 저장하여 클러스터에 적용한다.
+[sample-gitops](https://github.com/oscka/sample-gitops/tree/main/sample-api/rolling-update-no-istio) 프로젝트의 rolling-update-no-istio 경로의 리소스들이 생성된다. 아래 ingress는 자동으로 생성되지 않을 경우 생성하고 요청이 제대로 가는지 확인한다.
 
 ```yaml
 apiVersion: networking.k8s.io/v1
