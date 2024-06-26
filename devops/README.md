@@ -53,11 +53,11 @@ vagrant 파일 생성 --> VM 조건에 맞게 수정
 
 주의사항
 - vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
-- 각 vm을 띄우는 방법은 링크된 Vagrantfile을 참고한다. 
+- 각 vm(ansible1, ansible2)을 띄우는 Vagrantfile 형식은 링크된 Vagrantfile을 참고한다. 
 - 로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
 
 vm생성 후 각 환경에 ip, password로 접속되는 지 확인한다.
-ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정을 수정한 뒤 데몬을 restart한다
+ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정(sshd_config, 60-clouding-setting-conf)을 수정한 뒤 데몬을 restart한다
 ```zsh
 #sudo vi /etc/ssh/sshd_config
 #sudo vi /etc/ssh/sshd_config.d/60-clouding-setting-conf
@@ -113,8 +113,23 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 - k3s, ingress-nginx, argocd, mysql 은 클러스터상에 설치
 - jenkins는 클러스터 밖에 별도로 설치
 
+주의사항
+
+Jenkins의 경우 job실행 속도 문제로 클러스터 밖의 환경에 별도로 설치하도록 구성하는 방법을 기준으로 한다.
+
+```zsh
+# jenkins 실행을 위한 jdk설치(2024.06 현재)
+sudo apt-get install openjdk-11-jdk
+# apt key 추가
+wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+# apt address 추가
+echo deb http://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
+# apt key 등록
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
+```
+
 ```bash
-./run-play.sh  "tool-basic, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql"
+./run-play.sh  "tool-basic, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql, demo-api-argocd"
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
