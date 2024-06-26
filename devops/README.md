@@ -124,7 +124,7 @@ sudo apt-get install openjdk-11-jdk
 wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
 # apt address 추가
 echo deb http://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
-# apt key 등록
+# apt key 등록 (해당 키의 경우 2026년 3월 26일까지의 만료 기한을 가지고 있음으로 2024.06 기준 문제가 없지만 기한이 지났을 시 현시점에서 만료되지 않은 기한을 가진 키가 필요하다.)
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
 ```
 
