@@ -178,11 +178,26 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 #github의 access token은 각자의 계정에서 Account > Setting > Developer setting에서 classic token으로 생성하며, Repo관련 권한을 전부 부여
 #docker hub계정은 공용으로 별도로 전달한 것을 사용한다.(개인계정을 써도 상관 없음)
 
+#5.job 생성
+#- jekins UI상에서 sample-api-build를 pipeline job으로 생성
+#- 상단에서 "이 빌드는 매개변수가 있습니다." 선택 > 매개변수는 Git Parameter를 선택 
+#- Name -> TAG, Description -> TAG or default, Default Value -> 0.0.1(default TAG Version) or default
+#- 하단 Pipeline 메뉴에서  "Pipeline Script from SCM"을 선택하고
+#- SCM -> GIT, Repository URL -> {your sample api project URL}(EX : https://github.com/{{개인ID}}/sample-api.git)
+#- Credentials -> 목록에서 git-credential 선택
+#- Branch to build - Branch Specifier (blank for 'any') -> {your git branch}(EX : */develop)
+#- pipeline script는 SCM에서 가져온 Jenkinsfile을 선택
+
+#6. 빌드 도구 설치
+# skaffold, kustomize 설치 - ./run-play.sh  "skaffold, kustomize"
+# jenkins계정에서 docker 수행이 가능해야 함
 ```
 ##### EX
-.
+```
+# defalt 는 따로 설정하지 않아도 이상 없음
+# secret
 ├── Kind                  
-├──<default>                       # defalt 는 따로 설정하지 않아도 이상 없음
+├──<default>                       
 │   ├── Scope
 │   ├──<default>
 │
@@ -197,19 +212,7 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 │
 │   ├── Description
 │   ├──<default>
-└────────────────────
-```
-
-#5.job 생성
-#- jekins UI상에서 sample-api-build를 pipeline job으로 생성
-#- 상단에서 "이 빌드는 매개변수가 있습니다." 를 선택하여 TAG를 입력
-#- 하단 Pipeline 메뉴에서  "Pipeline Script from SCM"을 선택하고
-#- git address(https://github.com/{{개인ID}}/sample-api.git)와 브랜치 입력
-#- pipeline script는 SCM에서 가져온 Jenkinsfile을 선택
-
-#6. 빌드 도구 설치
-# skaffold, kustomize 설치 - ./run-play.sh  "skaffold, kustomize"
-# jenkins계정에서 docker 수행이 가능해야 함
+└───────────────────────────────────────────────────────
 ```
 
 ### CD구성
