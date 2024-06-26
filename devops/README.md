@@ -220,11 +220,15 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 CI가 완료되면 1.MSA어플리케이션은 이미지 형태로 containerize되어 docker hub에 deploy된다. 또한 동시에 2. gitops repository의 해당 어플리케이션 버전을 업데이트한다.
 
 ```zsh
-#1. argocd에 로그인하여 setting > repository 메뉴에서 새로운 repository를 등록한다.
-# gitops address - https://github.com/{{개인ID}}/sample-gitops.git
+#1. argocd에 로그인하여 setting > repository 메뉴에서 새로운 repository를 등록(+ CONNECT REPO)한다.
+# Choose your connection method -> VIA HTTPS
+# Project -> default 선택
+# gitops address(Repository URL) - https://github.com/{{개인ID}}/sample-gitops.git
 # https방식으로 연결시 github id와 access token이 필요하다.(password는 보안때문에 사용 불가)
+# Username -> {git name}(ex : Gene-Lee97), Password -> {git access token}
 
 #2. 배포를 위한 app을 등록한다.
+# Application - + NEW APP
 # Application Name - sample-api
 # Project Name - default
 # Repository URL - https://github.com/{{개인ID}}/sample-gitops.git(자동입력 선택)
