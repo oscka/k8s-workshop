@@ -55,7 +55,7 @@ vagrant 파일 생성 --> VM 조건에 맞게 수정
 - vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
 - 각 vm(ansible1, ansible2)을 띄우는 Vagrantfile 형식은 링크된 Vagrantfile을 참고한다. 
 - 로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
-- vm 재생성시 known_host, authorized_keys에 예전의 key가 남아있을 수 있음으로 조심
+- vm 재생성시 known_host, authorized_keys에 예전 host, client의 key가 남아있다
 
 vm생성 후 각 환경에 ip, password로 접속되는 지 확인한다.
 ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정(sshd_config, 60-clouding-setting-conf)을 수정한 뒤 데몬을 restart한다
