@@ -55,6 +55,7 @@ vagrant 파일 생성 --> VM 조건에 맞게 수정
 - vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
 - 각 vm(ansible1, ansible2)을 띄우는 Vagrantfile 형식은 링크된 Vagrantfile을 참고한다. 
 - 로컬 - vm1 - vm2간의 ssh 및 http통신이 원활하여야 한다.
+- vm 재생성시 known_host, authorized_keys에 예전의 key가 남아있을 수 있음으로 조심
 
 vm생성 후 각 환경에 ip, password로 접속되는 지 확인한다.
 ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정(sshd_config, 60-clouding-setting-conf)을 수정한 뒤 데몬을 restart한다
@@ -127,9 +128,16 @@ echo deb http://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources
 # apt key 등록 (해당 키의 경우 2026년 3월 26일까지의 만료 기한을 가지고 있음으로 2024.06 기준 문제가 없지만 기한이 지났을 시 현시점에서 만료되지 않은 기한을 가진 키가 필요하다.)
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
 ```
-
+##### ansible install
 ```bash
 ./run-play.sh  "tool-basic, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql, demo-api-argocd"
+```
+
+주의사항
+
+```bash
+Ansible Install 실패시 target(ansible2) 에 인스톨 되어있는 파일들이 잔류한다.
+다시 Install 시 secret 생성, argocd password 재설정 등을 다시 실행하기 때문에 이전의 작업들과 충돌한다. 
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
