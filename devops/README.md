@@ -29,12 +29,27 @@
 ### 환경준비
 
 다음과 같이 vagrant(virtualbox)기반으로 vm을 두 대 생성한다. 
+vagrant 파일을 위치시킬 dir을 생성하되 각각의 vagrant 파일을 다른 dir에 위치시킨다.
+
 - vm1(ansible1) - agent역할, ansible 코드를 받아 target서버에 설치를 수행한다.
   - 파일 위치 - [vagrant\vbox\ansible1\Vagrantfile](https://raw.githubusercontent.com/oscka/k8s-workshop/main/vagrant/vbox/ansible1/Vagrantfile)
   - 권장 사양 - 4core, 4G ram
 - vm2(ansible2) - target역할, jenkins 및 k3s기반 클러스터, sample-api가 실행된다.
   - 파일 위치 - [vagrant\vbox\ansible2\Vagrantfile](https://raw.githubusercontent.com/oscka/k8s-workshop/main/vagrant/vbox/ansible2/Vagrantfile)
   - 권장 사양 - 8core, 8G ram
+
+VM 생성
+- vagrant 파일 생성 및 수정 후 vagrant로 실행하여 vm을 생성한다.
+
+```zsh
+#각각의 vagrant 위치에서 실행한다.
+...
+# vagrant init
+vagrant 파일 생성 --> VM 조건에 맞게 수정  
+...
+# vagrant up
+생성한 vagrant 파일을 실행하여 VM 생성
+```
 
 주의사항
 - vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
@@ -45,6 +60,7 @@ vm생성 후 각 환경에 ip, password로 접속되는 지 확인한다.
 ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정을 수정한 뒤 데몬을 restart한다
 ```zsh
 #sudo vi /etc/ssh/sshd_config
+#sudo vi /etc/ssh/sshd_config.d/60-clouding-setting-conf
 ...
 # To disable tunneled clear text passwords, change to no here!
 PasswordAuthentication yes --> 이 부분을 no에서 yes로 변경
@@ -84,6 +100,8 @@ ssh vagrant@192.168.56.11
 
 [msa-starter-kit](https://github.com/oscka/msa-starter-kit)을 clone하여 다음과 같이 설치
 
+ansible에서는 설치 대상(target) 정보를 인벤토리(Inventory) 라는 개념으로 관리하며 인벤토리(여러가지 형태가 있지만 여기서는 host-vm 이다.) 정보를 설치 대상 VM정보에 맞게 업데이트 해 주어야 한다.
+
 사전에 playbooks/host-vm 파일의 내용을 아래와 같이 수정하여 ansible이 작업을 실행할 수 있게 설정한다. 
 
 ```zsh
@@ -100,8 +118,8 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
-- 파란색 흐름 - CI(통합빌드)를 의미, 소스코드를 받아 빌드, dockerizing하고 docker hub에 push한다.
-- 빨간색 흐름 - CD(배포)를 의미, Gitops에 변경된 버전을 확인하여 정의된 배포 전략에 따라 배포를 수행한다.
+- 파란색 흐름 - CI(통합빌드)를 의미, 원격 저장소가 Jenkins의 job 트리거 조건(webhook, push 등등)을 만족 시 소스코드를 받아 빌드, dockerizing하고 docker hub에 push한다.
+- 빨간색 흐름 - CD(배포)를 의미, Argocd가 Gitops에 변경된 버전을 확인하여 정의된 배포 전략에 따라 배포를 수행한다.
 
 ![cicd-msa-env](https://user-images.githubusercontent.com/112376183/201487394-ebf3a507-aa51-4cb1-87e3-08b283a868fe.png)
 
@@ -115,6 +133,10 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 - sample-api - https://github.com/{{개인ID}}/sample-api.git
 - sample-gitops - https://github.com/{{개인ID}}/sample-gitops.git
 
+프로젝트들을 fork 후 sample-api 프로젝트의 sample-api/Jenkinsfile 에 define 되어있는 gitUrl, gitOpsUrl 을 수정한다.
+
+- def gitUrl = "https://github.com/{{개인ID}}/${PROJECT_NAME}.git"
+- def gitOpsUrl = "https://github.com/{{개인ID}}/sample-gitops.git"
 
 ### CI구성
 
@@ -128,6 +150,7 @@ sudo service docker restart
 
 #2.계정 생성 및 비밀번호 변경
 #admin/admin1234 로 관리자 계정 생성(UI에서)
+#Jenkins의 초기 관리자 비밀번호를 출력하기 위한 명령어
 cat /var/lib/jenkins/secrets/initialAdminPassword
 
 #3.로그인 후 플러그인 설치
@@ -222,4 +245,5 @@ k apply -f ./sample-api-ingress.yml -n api
 
 http://sample-api.{{서버의IP주소}}.sslip.io/swagger-ui.html
 
-update test
+
+
