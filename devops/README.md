@@ -200,7 +200,7 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 # skaffold, kustomize 설치 - ./run-play.sh  "skaffold, kustomize"
 # jenkins계정에서 docker 수행이 가능해야 함
 ```
-##### EX
+##### Credential Create EX
 ```
 # defalt 는 따로 설정하지 않아도 이상 없음
 # secret
