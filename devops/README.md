@@ -222,5 +222,4 @@ k apply -f ./sample-api-ingress.yml -n api
 
 http://sample-api.{{서버의IP주소}}.sslip.io/swagger-ui.html
 
-
-
+update test
