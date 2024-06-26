@@ -164,9 +164,9 @@ sudo usermod -aG docker jenkins
 sudo service docker restart
 
 #2.계정 생성 및 비밀번호 변경
-#admin/admin1234 로 관리자 계정 생성(UI에서)
 #Jenkins의 초기 관리자 비밀번호를 출력하기 위한 명령어
 cat /var/lib/jenkins/secrets/initialAdminPassword
+#admin/admin1234 로 관리자 계정 생성(UI에서)
 
 #3.로그인 후 플러그인 설치
 # 플러그인 3개 - git parameter, workspace cleanup, docker pipeline
@@ -177,6 +177,28 @@ cat /var/lib/jenkins/secrets/initialAdminPassword
 #jenkins관리 > credential상에 위의 이름으로 생성하고 각각 github의 accesstoken 정보와 docker hub의 ID/PW정보를 입력해 둔다.
 #github의 access token은 각자의 계정에서 Account > Setting > Developer setting에서 classic token으로 생성하며, Repo관련 권한을 전부 부여
 #docker hub계정은 공용으로 별도로 전달한 것을 사용한다.(개인계정을 써도 상관 없음)
+
+```
+##### EX
+.
+├── Kind                  
+├──<default>                       # defalt 는 따로 설정하지 않아도 이상 없음
+│   ├── Scope
+│   ├──<default>
+│
+│   ├── Username
+│   ├──<{git name} or "oscka">
+│
+│   ├── Password
+│   ├──<{git access token} or {docker hub access token}>
+│
+│   ├── ID
+│   ├──<"git-credential" or "imageRegistry-credential">
+│
+│   ├── Description
+│   ├──<default>
+└────────────────────
+```
 
 #5.job 생성
 #- jekins UI상에서 sample-api-build를 pipeline job으로 생성
