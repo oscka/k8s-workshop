@@ -61,7 +61,7 @@ vm생성 후 각 환경에 ip, password로 접속되는 지 확인한다.
 ssh로 id,password로 접속하기 위해 각 환경의 ssh server의 설정(sshd_config, 60-clouding-setting-conf)을 수정한 뒤 데몬을 restart한다
 ```zsh
 #sudo vi /etc/ssh/sshd_config
-#sudo vi /etc/ssh/sshd_config.d/60-clouding-setting-conf
+#sudo vi /etc/ssh/sshd_config.d/60-cloudimg-settings-conf
 ...
 # To disable tunneled clear text passwords, change to no here!
 PasswordAuthentication yes --> 이 부분을 no에서 yes로 변경
