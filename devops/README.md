@@ -22,6 +22,7 @@
 - jenkins (클러스터 외부에 설치)
 - argocd
 - mysql
+- simple-api
 - sample-api
 - github(외부 서비스)
 - docker hub(외부 서비스)
@@ -40,6 +41,7 @@ vagrant 파일을 위치시킬 dir을 생성하되 각각의 vagrant 파일을 �
 
 VM 생성
 - vagrant 파일 생성 및 수정 후 vagrant로 실행하여 vm을 생성한다.
+- 로컬환경에서 2대의 서버를 띄우기 힘들 경우 vm2의 사양으로만 생성하여 테스트한다. 
 
 ```zsh
 #각각의 vagrant 위치에서 실행한다.
@@ -130,7 +132,7 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
 ```
 ##### ansible install
 ```bash
-./run-play.sh  "tool-basic, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql, demo-api-argocd"
+./run-play.sh  "tool-basic, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql, simple-api-argocd"
 ```
 
 주의사항
@@ -145,6 +147,10 @@ Ansible Install 실패시 target(ansible2) 에 인스톨 되어있는 파일들�
 - 빨간색 흐름 - CD(배포)를 의미, Argocd가 Gitops에 변경된 버전을 확인하여 정의된 배포 전략에 따라 배포를 수행한다.
 
 ![cicd-msa-env](https://user-images.githubusercontent.com/112376183/201487394-ebf3a507-aa51-4cb1-87e3-08b283a868fe.png)
+
+simple-api-ingress를 통해 자동 설치된 ingress에 접속하여 확인한다.
+
+##### sample-project 준비
 
 다음 프로젝트를 fork하여 각자의 계정에 프로젝트를 생성한다.
 
