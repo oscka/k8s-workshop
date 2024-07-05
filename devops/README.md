@@ -307,5 +307,8 @@ k apply -f ./sample-api-ingress.yml -n api
 
 http://sample-api.{{서버의IP주소}}.sslip.io/swagger-ui.html
 
+DB접속은 같이 설정된 ingress를 통하여 다음과 같이 확인할 수 있다.
+
+mysql -h mysql.192.168.56.10.sslip.io -u root -p
 
 
