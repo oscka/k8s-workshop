@@ -5,6 +5,7 @@
     - [소개](#소개)
     - [환경준비](#환경준비)
     - [설치](#설치)
+    - [실행](#실행)
     - [CI구성](#ci구성)
     - [CD구성](#cd구성)
     - [테스트](#테스트)
@@ -26,6 +27,10 @@
 - sample-api
 - github(외부 서비스)
 - docker hub(외부 서비스)
+
+#### workshop목표
+
+최종적으로 위와 같이 테스트를 위한 kubernets환경을 로컬에 구성하고, 샘플 어플리케이션(simple-api, sample-api)이 로컬에서 동작하는 것을 확인하여 향후 개발 및 운영을 위한 기반으로 삼는다.
 
 ### 환경준비
 
@@ -117,30 +122,11 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 - k3s, ingress-nginx, argocd, mysql 은 클러스터상에 설치
 - jenkins는 클러스터 밖에 별도로 설치
 
-주의사항
+### 실행
 
-Jenkins의 경우 job실행 속도 문제로 클러스터 밖의 환경에 별도로 설치하도록 구성하는 방법을 기준으로 한다.
-
-```zsh
-# jenkins 실행을 위한 jdk설치(2024.06 현재)
-sudo apt-get install openjdk-11-jdk
-# apt key 추가
-wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
-# apt address 추가
-echo deb http://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
-# apt key 등록 (해당 키의 경우 2026년 3월 26일까지의 만료 기한을 가지고 있음으로 2024.06 기준 문제가 없지만 기한이 지났을 시 현시점에서 만료되지 않은 기한을 가진 키가 필요하다.)
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
-```
-##### ansible install
+#### devops env install(/w ansible)
 ```bash
 ./run-play.sh  "tool-basic, helm-repo, k3s, ingress-nginx, jenkins, docker, argocd, mysql, simple-api-argocd"
-```
-
-주의사항
-
-```bash
-Ansible Install 실패시 target(ansible2) 에 인스톨 되어있는 파일들이 잔류한다.
-다시 Install 시 secret 생성, argocd password 재설정 등을 다시 실행하기 때문에 이전의 작업들과 충돌한다. 
 ```
 
 설치하면 아래와 같은 구성과 같이 설치된다.
@@ -151,7 +137,7 @@ Ansible Install 실패시 target(ansible2) 에 인스톨 되어있는 파일들�
 
 simple-api-ingress를 통해 자동 설치된 ingress에 접속하여 확인한다.
 
-##### sample-project 준비
+#### sample-project 준비
 
 다음 프로젝트를 fork하여 각자의 계정에 프로젝트를 생성한다.
 
@@ -167,6 +153,31 @@ simple-api-ingress를 통해 자동 설치된 ingress에 접속하여 확인한�
 
 - def gitUrl = "https://github.com/{{개인ID}}/${PROJECT_NAME}.git"
 - def gitOpsUrl = "https://github.com/{{개인ID}}/sample-gitops.git"
+
+
+#### 주의사항
+
+##### Jenkins 구성관련
+
+Jenkins의 경우 job실행 속도 문제로 클러스터 밖의 환경에 별도로 설치하도록 구성하는 방법을 기준으로 한다.
+
+```zsh
+# jenkins 실행을 위한 jdk설치(2024.06 현재)
+sudo apt-get install openjdk-11-jdk
+# apt key 추가
+wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+# apt address 추가
+echo deb http://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
+# apt key 등록 (해당 키의 경우 2026년 3월 26일까지의 만료 기한을 가지고 있음으로 2024.06 기준 문제가 없지만 기한이 지났을 시 현시점에서 만료되지 않은 기한을 가진 키가 필요하다.)
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
+```
+
+##### 오류 발생시 재실행 관련
+
+```bash
+Ansible Install 실패시 target(ansible2) 에 인스톨 되어있는 파일들이 잔류한다.
+다시 Install 시 secret 생성, argocd password 재설정 등을 다시 실행하기 때문에 이전의 작업들과 충돌한다. 
+```
 
 ### CI구성
 
