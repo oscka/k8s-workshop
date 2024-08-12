@@ -34,6 +34,8 @@
 
 ### 환경준비
 
+#### VM 생성
+
 다음과 같이 vagrant(virtualbox)기반으로 vm을 두 대 생성한다. 
 vagrant 파일을 위치시킬 dir을 생성하되 각각의 vagrant 파일을 다른 dir에 위치시킨다.
 
@@ -44,7 +46,6 @@ vagrant 파일을 위치시킬 dir을 생성하되 각각의 vagrant 파일을 �
   - 파일 위치 - [vagrant\vbox\ansible2\Vagrantfile](https://raw.githubusercontent.com/oscka/k8s-workshop/main/vagrant/vbox/ansible2/Vagrantfile)
   - 권장 사양 - 8core, 8G ram
 
-VM 생성
 - vagrant 파일 생성 및 수정 후 vagrant로 실행하여 vm을 생성한다.
 - 로컬환경에서 2대의 서버를 띄우기 힘들 경우 vm2의 사양으로만 생성하여 테스트한다. 
 
@@ -58,7 +59,8 @@ vagrant 파일 생성 --> VM 조건에 맞게 수정
 생성한 vagrant 파일을 실행하여 VM 생성
 ```
 
-주의사항
+#### 주의사항
+
 - vm1은 로컬이 리눅스 환경이거나, 윈도우의 wsl이라도 상관은 없다.
 - 각 vm(ansible1, ansible2)을 띄우는 Vagrantfile 형식은 링크된 Vagrantfile을 참고한다. 
 - 로컬환경의 사양에 따라, vagrant말고 WSL또는 리눅스 환경에서 사용하시는 것을 권장(vagrant는 오래된 툴이나 보니, 예전에는 대안이 없었는데 현재는 대안도 많고 많이 느려졌습니다.)
