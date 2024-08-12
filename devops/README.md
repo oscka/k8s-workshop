@@ -137,6 +137,8 @@ step1 ansible_host=192.168.56.11 ansible_user=vagrant ansible_port=22 ansible_ss
 
 simple-api-ingress를 통해 자동 설치된 ingress에 접속하여 확인한다.
 
+이후 아래와 같이 CI,CD 프로세스를 구성하여 자동화된 devops 환경을 구성하고 지속적으로 서비스를 배포할 수 있는 환경을 만들어 본다.
+
 #### sample-project 준비
 
 다음 프로젝트를 fork하여 각자의 계정에 프로젝트를 생성한다.
