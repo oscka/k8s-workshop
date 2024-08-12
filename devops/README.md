@@ -176,10 +176,10 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 5BA31D57EF5975CA
 
 ##### 오류 발생시 재실행 관련
 
-```bash
-Ansible Install 실패시 target(ansible2) 에 인스톨 되어있는 파일들이 잔류한다.
+특정 Ansible Task Install 실패시 target(ansible2) 에 인스톨 되어있는 파일들이 잔류한다.
 다시 Install 시 secret 생성, argocd password 재설정 등을 다시 실행하기 때문에 이전의 작업들과 충돌한다. 
-```
+- 작성된 ansible task script가 replay 가능할 경우 재실행하여도 상관이 없으나
+- 재실행이 안되거나, uninstall script가 별도로 있는 경우 vm을 재생성하여 처음부터 수행하거나, uninstall한 뒤 다시 install을 수행한다.
 
 ### CI구성
 
