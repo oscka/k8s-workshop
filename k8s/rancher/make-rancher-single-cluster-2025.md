@@ -166,5 +166,10 @@ helm upgrade --install gitlab gitlab/gitlab \
   
   
 
+### 3-2. opensearch 설치
 
+https://www.instaclustr.com/education/opensearch/getting-started-with-opensearch-2-quick-tutorials/
+
+helm repo add opensearch https://opensearch-project.github.io/helm-charts/
+helm repo update
      
