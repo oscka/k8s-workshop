@@ -146,30 +146,47 @@ spec:
 
 
 
+
 ## 3. OSS 설치
 
 ### 3-1.gitlab 설치
 
-cert-manager를 rancher 설치시 이미 설치했으므로, 아래에서는 제외되어야 정상 설치됨.
+cert-manager를 통해 내부적으로 인증서를 관리할 수 있으나, 여기서는 on prem에서 사설인증서를 적용하기 위해 설치에서 제외한다.
 
 ```
+# 1. 바로 설치
+kubectl create ns cicd
 helm repo add gitlab https://charts.gitlab.io/
 helm repo update
-helm upgrade --install gitlab gitlab/gitlab \
+helm upgrade -n cicd --install gitlab gitlab/gitlab \
   --timeout 600s \
-  --set global.hosts.domain=gitlab.k2p-option.com \
+  --set global.hosts.domain=k2p-option.com \
   --set global.hosts.externalIP=192.168.122.37 \
   --set certmanager-issuer.email=me@example.com \
   --set certmanager.install=false \
-  --set global.edition=ce
-```  
-  
-  
+  --set global.edition=ce:PVC
 
-### 3-2. opensearch 설치
+#초기 비밀번호 확인(root계정)
+kubectl get secret -n cicd gitlab-gitlab-initial-root-password -o jsonpath="{.data.password}" | base64 -d ; echo
+
+# 2. 차트 다운로드 후 설치
+helm search repo -l gitlab/gitlab
+helm pull gitlab/gitlab --version 8.9.2
+tar -xzvf gitlab-8.9.2.tgz # 압축 해제
+
+# 2-1. values.yaml 내용 수정 - 다음과 같은 설정들을 수정한다.
+#-postgresql 버전 변경
+#-certmanager관련 설치옵션 비활성화
+#-prometheus 설치옵션 비활성화
+
+# 2-2. 설치
+helm install gitlab gitlab/gitlab -f values.yaml -n cicd
+```
+
+
+### 3-2. opensearch 설치(작성중)
 
 https://www.instaclustr.com/education/opensearch/getting-started-with-opensearch-2-quick-tutorials/
-
 helm repo add opensearch https://opensearch-project.github.io/helm-charts/
 helm repo update
-     
+
