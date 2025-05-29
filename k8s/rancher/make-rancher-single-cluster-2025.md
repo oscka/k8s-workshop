@@ -190,3 +190,27 @@ https://www.instaclustr.com/education/opensearch/getting-started-with-opensearch
 helm repo add opensearch https://opensearch-project.github.io/helm-charts/
 helm repo update
 
+
+
+
+## 4. 어플리케이션 배포하기
+
+simple-api 어플리케이션 배포 
+https://github.com/oscka/simple-gitops/tree/main/simple-api/rolling-update-no-istio 하위의 다음 파일을 대상으로 수행
+simple-api-deployment.yaml
+simple-api-ingress.yaml
+simple-api-svc.yaml
+```
+#simple-api-deployment.yaml 파일 안의 내용을 수정
+...
+image: oscka/simple-api ->  image: oscka/simple-api:0.0.1
+...
+#simple-api-ingress.yaml 파일 안의 내용을 수정(external ip주소에 맞게)
+  - host: "simple-api.192.168.56.10.sslip.io"
+# 디버깅을 위해 임시 인스턴스를 생성하여 해당 인스턴스 안에서 curl명령으로 확인 가능
+kubectl run dev-tools -it --image oscka/osc-devtools -n sample 
+# 다음과 같이 배포를 수행합니다.
+kubectl apply -f ./simple-api-deployment.yaml
+# 호출하면서 로그를 확인합니다.
+curl http://simple-api.192.168.122.37.sslip.io/api/simple
+```
