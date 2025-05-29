@@ -192,14 +192,16 @@ helm repo update
 
 
 
-
 ## 4. 어플리케이션 배포하기
 
 simple-api 어플리케이션 배포 
+
 https://github.com/oscka/simple-gitops/tree/main/simple-api/rolling-update-no-istio 하위의 다음 파일을 대상으로 수행
-simple-api-deployment.yaml
-simple-api-ingress.yaml
-simple-api-svc.yaml
+
+- simple-api-deployment.yaml
+- simple-api-ingress.yaml
+- simple-api-svc.yaml
+- 
 ```
 #simple-api-deployment.yaml 파일 안의 내용을 수정
 ...
@@ -214,3 +216,5 @@ kubectl apply -f ./simple-api-deployment.yaml
 # 호출하면서 로그를 확인합니다.
 curl http://simple-api.192.168.122.37.sslip.io/api/simple
 ```
+
+
