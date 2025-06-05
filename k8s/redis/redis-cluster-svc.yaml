@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: redis
+  labels:
+    app: redis-slave-cluster
+    redis: cluster
+spec:
+  clusterIP: None
+  ports:
+  - name: redis-master-cluster
+    port: 6379
+    protocol: TCP
+    targetPort: 6379
+
+  - name: redis-slave-cluster
+    port: 6380
+    protocol: TCP
+    targetPort: 6380
+
+  selector:
+    cluster: redis

@@ -1,0 +1,81 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-cluster-slave
+  namespace: redis
+data:
+  update-node.sh: |
+    #!/bin/sh
+    REDIS_NODES="/data/nodes.conf"
+    sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" ${REDIS_NODES}
+    exec "$@"
+  redis.conf: |+
+    port 6380
+    cluster-enabled yes
+    cluster-require-full-coverage no
+    cluster-node-timeout 1500
+    cluster-config-file /data/nodes.conf
+    cluster-migration-barrier 1
+    appendonly yes
+    always-show-logo yes
+    protected-mode no
+    rename-command FLUSHALL TOPFLUSAHALL
+    rename-command FLUSHDB TOPFLUSHDB
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-slave-cluster
+  namespace: redis
+spec:
+  serviceName: redis-slave-cluster
+  replicas: 3
+  selector:
+    matchLabels:
+      app: redis-slave-cluster
+      cluster: redis
+  template:
+    metadata:
+      labels:
+        app: redis-slave-cluster
+        cluster: redis
+    spec:
+      hostNetwork: true
+      containers:
+        - name: redis
+          image: redis:7.0.8
+          ports:
+            - containerPort: 6380
+              name: client
+          command:
+            - /conf/update-node.sh
+            - redis-server
+            - /conf/redis.conf
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+          volumeMounts:
+            - name: conf
+              mountPath: /conf
+              readOnly: false
+            - name: data
+              mountPath: /data
+              readOnly: false
+      volumes:
+        - name: conf
+          configMap:
+            name: redis-cluster-slave
+            defaultMode: 0755
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi

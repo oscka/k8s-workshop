@@ -98,7 +98,8 @@ systemctl restart nfs-server
 systemctl status nfs-server
 ```
 
-### 2-7. NFS 클라이언트 설치
+### 2-7. NFS 클라이언트 설치(필요시)
+이 부분은 NFS 서버에 연결하여 로컬에 공유 스토리지를 마운트 하기 위한 방법이며, 클러스터의 스토리지 클래스로 설정하기 위해ㅔ서는 nfs-common만 설치되어 있으면 된다.
 ```
 apt install nfs-common
 
@@ -191,6 +192,103 @@ helm repo add opensearch https://opensearch-project.github.io/helm-charts/
 helm repo update
 
 
+### 3-3. Kafka 설치
+
+```zsh
+helm repo add kafka-repo https://charts.bitnami.com/bitnami
+helm repo update
+helm install my-kafka kafka-repo/kafka
+```
+
+### 3.4. Redis(OSS) 설치
+helm이 아닌 k8s manifest를 이용하여 생성한다.
+
+redis 클러스터 설치(../redis 경로 참고)
+
+```zsh
+kubectl create -f redis-cluster-master.yaml
+kubectl create -f redis-cluster-slave.yaml
+kubectl create -f redis-cluster-svc.yaml
+```
+
+redis 클러스터 생성
+
+```zsh
+$ redis-cli --cluster create --cluster-replicas 1 192.168.122.102:6379 192.168.122.101:6379 192.168.122.100:6379 192.168.122.102:6380 192.168.122.101:6380 192.168.122.100:6380
+>>> Performing hash slots allocation on 6 nodes...
+Master[0] -> Slots 0 - 5460
+Master[1] -> Slots 5461 - 10922
+Master[2] -> Slots 10923 - 16383
+Adding replica 192.168.122.101:6380 to 192.168.122.102:6379
+Adding replica 192.168.122.100:6380 to 192.168.122.101:6379
+Adding replica 192.168.122.102:6380 to 192.168.122.100:6379
+M: 8b35ccb1193b0b5e4634ee1510442373dd2f49d5 192.168.122.102:6379
+   slots:[0-5460] (5461 slots) master
+M: f1ccbebaa3bf7657bfc4aa46f4213bd307600740 192.168.122.101:6379
+   slots:[5461-10922] (5462 slots) master
+M: 957fc5a1a5ca64478337a7cf2ca057113ac845a7 192.168.122.100:6379
+   slots:[10923-16383] (5461 slots) master
+S: 31882c72ba0184da25b81bf0f5eda11fb35ef6f8 192.168.122.102:6380
+   replicates 957fc5a1a5ca64478337a7cf2ca057113ac845a7
+S: a76603262c46f101d5afbb7b4b37b18c766d7bba 192.168.122.101:6380
+   replicates 8b35ccb1193b0b5e4634ee1510442373dd2f49d5
+S: 04698386611798d00b1fb9ec33bede9629c672d6 192.168.122.100:6380
+   replicates f1ccbebaa3bf7657bfc4aa46f4213bd307600740
+Can I set the above configuration? (type 'yes' to accept): yes
+>>> Nodes configuration updated
+>>> Assign a different config epoch to each node
+>>> Sending CLUSTER MEET messages to join the cluster
+Waiting for the cluster to join
+
+>>> Performing Cluster Check (using node 192.168.122.102:6379)
+M: 8b35ccb1193b0b5e4634ee1510442373dd2f49d5 192.168.122.102:6379
+   slots:[0-5460] (5461 slots) master
+   1 additional replica(s)
+S: a76603262c46f101d5afbb7b4b37b18c766d7bba 192.168.122.101:6380
+   slots: (0 slots) slave
+   replicates 8b35ccb1193b0b5e4634ee1510442373dd2f49d5
+S: 31882c72ba0184da25b81bf0f5eda11fb35ef6f8 192.168.122.102:6380
+   slots: (0 slots) slave
+   replicates 957fc5a1a5ca64478337a7cf2ca057113ac845a7
+M: 957fc5a1a5ca64478337a7cf2ca057113ac845a7 192.168.122.100:6379
+   slots:[10923-16383] (5461 slots) master
+   1 additional replica(s)
+S: 04698386611798d00b1fb9ec33bede9629c672d6 192.168.122.100:6380
+   slots: (0 slots) slave
+   replicates f1ccbebaa3bf7657bfc4aa46f4213bd307600740
+M: f1ccbebaa3bf7657bfc4aa46f4213bd307600740 192.168.122.101:6379
+   slots:[5461-10922] (5462 slots) master
+   1 additional replica(s)
+[OK] All nodes agree about slots configuration.
+>>> Check for open slots...
+>>> Check slots coverage...
+[OK] All 16384 slots covered.
+```
+
+redis 클러스터 사용
+
+```zsh
+# 노드 상태 확인
+$ redis-cli cluster nodes
+a76603262c46f101d5afbb7b4b37b18c766d7bba 192.168.122.101:6380@16380 slave 8b35ccb1193b0b5e4634ee1510442373dd2f49d5 0 1749099040374 1 connected
+8b35ccb1193b0b5e4634ee1510442373dd2f49d5 192.168.122.102:6379@16379 myself,master - 0 1749099040000 1 connected 0-5460
+31882c72ba0184da25b81bf0f5eda11fb35ef6f8 192.168.122.102:6380@16380 slave 957fc5a1a5ca64478337a7cf2ca057113ac845a7 0 1749099040575 3 connected
+957fc5a1a5ca64478337a7cf2ca057113ac845a7 192.168.122.100:6379@16379 master - 0 1749099039971 3 connected 10923-16383
+04698386611798d00b1fb9ec33bede9629c672d6 192.168.122.100:6380@16380 slave f1ccbebaa3bf7657bfc4aa46f4213bd307600740 0 1749099040173 2 connected
+f1ccbebaa3bf7657bfc4aa46f4213bd307600740 192.168.122.101:6379@16379 master - 0 1749099040000 2 connected 5461-10922
+
+# 클러스터 정보 조회
+redis-cli cluster info
+# 접속 및 테스트
+redis-cli -c
+/data # redis-cli -c
+127.0.0.1:6379> set hello world
+OK
+127.0.0.1:6379> get hello
+"world"
+```
+
+
 
 ## 4. 어플리케이션 배포하기
 
@@ -202,7 +300,7 @@ https://github.com/oscka/simple-gitops/tree/main/simple-api/rolling-update-no-is
 - simple-api-ingress.yaml
 - simple-api-svc.yaml
 - 
-```
+```zsh
 #simple-api-deployment.yaml 파일 안의 내용을 수정
 ...
 image: oscka/simple-api ->  image: oscka/simple-api:0.0.1
@@ -216,5 +314,7 @@ kubectl apply -f ./simple-api-deployment.yaml
 # 호출하면서 로그를 확인합니다.
 curl http://simple-api.192.168.122.37.sslip.io/api/simple
 ```
+
+
 
 
