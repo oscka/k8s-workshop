@@ -209,7 +209,52 @@ helm repo update
 helm install my-kafka kafka-repo/kafka
 ```
 
-### 3.4. Redis(OSS) 설치
+## 4. Multi Node
+
+### 4.1. 준비
+클러스터 설정을 위한 멀티 노드 환경 세팅
+worker 노드로 사용할 vm 생성 (원하는 개수 만큼)
+```zsh
+# 1. 새로 생성한 각 vm에서 OS 업데이트 및 방화벽 해제 설정 (master 노드와 동일)
+swapoff -a
+apt-get upgrade -y
+apt-get dist-upgrade -y
+apt-get update -y
+systemctl stop ufw && ufw disable && iptables -F
+```
+```zsh
+# 2. RKE2 agent 설치 (master 노드와 다름!! agent)
+curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
+sudosystemctl enable rke2-agent.service
+```
+
+```zsh
+# 3. master node 토큰 확인 (master 노드에서 수행)
+cat /var/lib/rancher/rke2/server/node-token
+
+# 샘플
+# K10bb3a06960ea16375ed144cd8f5a8a98e7a5fc629b675021fa9447fc5daba8353::server:2f17234499ff71cd092f4d442fe900fb
+```
+
+```zsh
+# 4. worker node config.yaml 파일 생성
+mkdir -p /etc/rancher/rke2/
+vi /etc/rancher/rke2/config.yaml
+
+--- config.yaml
+server: https://마스터노드IP:9345
+token: master node 토큰
+--- 
+--- 샘플 config.yaml
+server: https://192.168.0.101:9345
+token: K10bb3a06960ea16375ed144cd8f5a8a98e7a5fc629b675021fa9447fc5daba8353::server:2f17234499ff71cd092f4d442fe900fb
+---
+```
+여기까지 진행하면 worker 노드 설정은 끝 \
+vm 계정 권한 이슈가 발생할 수 있으므로 테스트 진행을 위한 환경에서는 root 권한 사용 권장 
+
+
+### 4.2. Redis(OSS) 설치
 helm이 아닌 k8s manifest를 이용하여 생성한다.
 
 redis 클러스터 설치(../redis 경로 참고)
@@ -299,7 +344,8 @@ OK
 
 
 
-## 4. 어플리케이션 배포하기
+
+## 5. 어플리케이션 배포하기
 
 simple-api 어플리케이션 배포 
 
