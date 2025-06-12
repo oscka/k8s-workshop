@@ -212,7 +212,7 @@ helm pull kafka-repo/kafka
 위와 같이 받은 저장소의 values.yaml 파일을 ../k8s/kafka/values.yaml 파일로 대체한 뒤 설치한다.
 
 ```zsh
-helm install my-kafka kafka-repo/kafka -n kafka
+helm install my-kafka kafka-repo/kafka -f values.yaml -n kafka
 ```
 
 
