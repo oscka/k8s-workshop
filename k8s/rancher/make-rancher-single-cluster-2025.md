@@ -206,8 +206,15 @@ helm repo update
 ```zsh
 helm repo add kafka-repo https://charts.bitnami.com/bitnami
 helm repo update
-helm install my-kafka kafka-repo/kafka
+helm pull kafka-repo/kafka
 ```
+
+위와 같이 받은 저장소의 values.yaml 파일을 ../k8s/kafka/values.yaml 파일로 대체한 뒤 설치한다.
+
+```zsh
+helm install my-kafka kafka-repo/kafka -n kafka
+```
+
 
 ## 4. Multi Node
 
@@ -354,7 +361,7 @@ https://github.com/oscka/simple-gitops/tree/main/simple-api/rolling-update-no-is
 - simple-api-deployment.yaml
 - simple-api-ingress.yaml
 - simple-api-svc.yaml
-- 
+
 ```zsh
 #simple-api-deployment.yaml 파일 안의 내용을 수정
 ...
