@@ -232,7 +232,7 @@ systemctl stop ufw && ufw disable && iptables -F
 ```zsh
 # 2. RKE2 agent 설치 (master 노드와 다름!! agent)
 curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
-sudosystemctl enable rke2-agent.service
+systemctl enable rke2-agent.service
 ```
 
 ```zsh
@@ -244,7 +244,27 @@ cat /var/lib/rancher/rke2/server/node-token
 ```
 
 ```zsh
-# 4. worker node config.yaml 파일 생성
+# 4. master node config.yaml 파일 생성
+vi /etc/rancher/rke2/config.yaml
+
+--- config.yaml
+advertise-address: 마스터노드IP
+token: master node 토큰
+--- 
+
+--- 샘플 config.yaml
+advertise-address: 192.168.0.101
+token: K104e9f8cb3257d84fbf1eeb633ca413f8126d4908eb245168b0259a03c30e54c8f::server:1e0ce06443d615b51fc7be3114fadc1e
+--- 
+```
+마스터 노드 설정이 없을 경우 워커 노드에 설정한 ip(예:192.168.0.101)가 아닌
+
+내부 ip(예:10.0.2.15)로 연결시 거부되어 구동되지 않음
+
+- rke2-canal
+
+```zsh
+# 5. worker node config.yaml 파일 생성
 mkdir -p /etc/rancher/rke2/
 vi /etc/rancher/rke2/config.yaml
 
