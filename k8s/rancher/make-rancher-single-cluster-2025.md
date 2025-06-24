@@ -222,6 +222,29 @@ helm install my-kafka kafka-repo/kafka -f values.yaml -n kafka
 클러스터 설정을 위한 멀티 노드 환경 세팅
 worker 노드로 사용할 vm 생성 (원하는 개수 만큼)
 ```zsh
+redis 노드 구성시 최소 사양 (redis 가이드)
+RAM : 4G / 10G(권장)
+STORAGE : 10G / 20G(권장)
+
+- 테스트 환경 vm생성 추천 
+CPU: 8코어(master) / 4코어(worker)
+RAM: 12G(master) / 8G(worker)
+STORAGE: 50G(master) / 20G(worker)
+
+가용 자원 기준이며 설치시 리소스 사용량이 많으면
+redis 관련 pod 생성 중지됨
+- vm의 RAM 올려서 할당해야 함
+
+운영환경 최소 사양
+NODE : 3개 (홀수로 구성)
+CPU : 2코어 / 8코어(권장)
+RAM : 8G / 32G(권장)
+```
+자세한 운영환경 최소 사향은 redis 가이드 참조
+
+https://redis.io/docs/latest/operate/rs/installing-upgrading/install/plan-deployment/hardware-requirements/
+
+```zsh
 # 1. 새로 생성한 각 vm에서 OS 업데이트 및 방화벽 해제 설정 (master 노드와 동일)
 swapoff -a
 apt-get upgrade -y
